@@ -1,7 +1,7 @@
 import pandas as pd
-Lexicon_Report=r'D:\AIAA\AIAA_Lexicon Report_August_31_2020.xlsx'
-Variant_Report=r'D:\AIAA\AIAA Variant Report _ August_31_2020.xlsx'
-save_path = r'D:\AIAA\VAR_Vs_VAR.xlsx'
+Lexicon_Report=r'D:\CCS\LexiconReport.xlsx'
+Variant_Report=r'D:\CCS\VariantReport.xlsx'
+save_path = r'D:\CCS\VAR_Vs_VAR.xlsx'
 
 
 import datetime
@@ -29,7 +29,8 @@ VAR2_MT=()
 
 SEQ_RATIO=()
 import difflib
-#for i in range(0,10):
+#VAR_List_row = 100
+
 for i in range(0,VAR_List_row-1):
     a=VAR_List.iat[i,0]
     for j in range(i+1,VAR_List_row):
@@ -37,20 +38,46 @@ for i in range(0,VAR_List_row-1):
             b=VAR_List.iat[j,0]
             seq = difflib.SequenceMatcher(None,a,b)
             d = seq.ratio()*100
-            if float(d) >= Match_Percentage:
-                VAR1+=(VAR_List.iat[i,0],)
-                VAR1_SYN_MT+=(VAR_List.iat[i,1],)
-                VAR2+=(VAR_List.iat[j,0],)
-                VAR2_SYN_MT+=(VAR_List.iat[j,1],)
-
+            if float(d) >= Match_Percentage:            
                 for k in range(0,len(df1)):
                     if VAR_List.iat[i,1] == df1.iat[k,1]:
-                        VAR1_MT+=(df1.iat[k,3],)
-                    
+                        l=k
+                        break;         
+                for k in range(0,len(df1)):   
                     if VAR_List.iat[j,1] == df1.iat[k,1]:
-                        VAR2_MT+=(df1.iat[k,3],)
-                        
+                        m=k
+                        break;       
+                if (df1.iat[l,3]==' ' and df1.iat[m,3]==' ') or (df1.iat[l,3] != df1.iat[m,3] and VAR_List.iat[i,0] != df1.iat[m,3]):
+                    VAR1+=(VAR_List.iat[i,0],)
+                    VAR1_SYN_MT+=(VAR_List.iat[i,1],)
+                    VAR1_MT+=(df1.iat[l,3],)
+                    VAR2+=(VAR_List.iat[j,0],)
+                    VAR2_SYN_MT+=(VAR_List.iat[j,1],)
+                    VAR2_MT+=(df1.iat[m,3],)
+                    SEQ_RATIO+=(d,)
+                    
+                '''
+                if df1.iat[l,3] != df1.iat[m,3] and VAR_List.iat[i,0] != df1.iat[m,3]:
+                    VAR1+=(VAR_List.iat[i,0],)
+                    VAR1_SYN_MT+=(VAR_List.iat[i,1],)
+                    VAR1_MT+=(df1.iat[l,3],)
+                    VAR2+=(VAR_List.iat[j,0],)
+                    VAR2_SYN_MT+=(VAR_List.iat[j,1],)
+                    VAR2_MT+=(df1.iat[m,3],)
+                    SEQ_RATIO+=(d,)
+                
+                VAR1+=(VAR_List.iat[i,0],)
+                VAR1_SYN_MT+=(VAR_List.iat[i,1],)
+                VAR1_MT+=(df1.iat[l,3],)
+                VAR2+=(VAR_List.iat[j,0],)
+                VAR2_SYN_MT+=(VAR_List.iat[j,1],)
+                VAR2_MT+=(df1.iat[m,3],)
                 SEQ_RATIO+=(d,)
+                '''
+                
+
+
+                    
     PER=(i+1)/VAR_List_row*100
     print("\nVAR_Vs_VAR", PER,"% Completed")
 VAR_Vs_VAR = pd.DataFrame(list(zip(VAR1, VAR1_SYN_MT, VAR1_MT,VAR2, VAR2_SYN_MT, VAR2_MT,SEQ_RATIO)), columns =['VAR1', 'VAR1_SYN_MT', 'VAR1_MT','VAR2', 'VAR2_SYN_MT','VAR2_MT', 'SEQ_RATIO']) 

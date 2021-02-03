@@ -1,6 +1,6 @@
 import pandas as pd
-Lexicon_Report_Link=r'D:\AIAA\AIAA_Lexicon Report_August_31_2020.xlsx'
-save_path = r'D:\AIAA\SYN_Vs_SYN.xlsx'
+Lexicon_Report_Link=r'D:\CCS\LexiconReport.xlsx'
+save_path = r'D:\CCS\SYN_Vs_SYN.xlsx'
 
 import datetime
 now = datetime.datetime.now()
@@ -9,7 +9,8 @@ df = pd.read_excel(Lexicon_Report_Link)
 
 MT_List=df[df['Is main term']==1]
 
-SYN_List=df[df['Is main term']==0]
+SYN_List=df[(df['Is main term']==0) & (df['isAcronym (in Lexicon)']==0)]
+#print(SYN_List)
 
 import datetime
 now = datetime.datetime.now()
@@ -31,7 +32,7 @@ import difflib
 #for i in range(0,10):
 for i in range(0,SYN_List_row-1):
 	a=SYN_List.iat[i,1]
-	for j in range(i+1,SYN_List_row):
+	for j in range(i+1,SYN_List_row):      
 		b=SYN_List.iat[j,1]
 		seq = difflib.SequenceMatcher(None,a,b)
 		d = seq.ratio()*100
